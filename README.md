@@ -47,7 +47,7 @@ It simulates trading decisions using historical stock market data.
 A web-based intelligent AI agent that provides real-time specifications and comparisons for Samsung smartphones.  
 It uses a hybrid approach combining **SQLite database caching** with **real-time web scraping**.
 
-**Live Demo:** https://samsung-phone-adviser.onrender.com
+**Live Demo:** https://samsung-phone-adviser-1.onrender.com/
 
 ### Key Features
 - Smart search for phone specs  
@@ -58,10 +58,12 @@ It uses a hybrid approach combining **SQLite database caching** with **real-time
 ### Output Preview
 
 **Comparison Result**
-![Comparison Result](INSERT_IMAGE_FILENAME_HERE_1.png)
+![Comparison Result](![photo_2026-02-05 02 24 33](https://github.com/user-attachments/assets/bf5e9849-0648-4d30-98ca-38f20a7bb906)
+)
 
 **Single Phone Result**
-![Single Result](INSERT_IMAGE_FILENAME_HERE_2.png)
+![Single Result](![photo_2026-02-05 02 24 58](https://github.com/user-attachments/assets/8a9f71ff-bd50-4fe0-807b-cd423b1f29fb)
+)
 
 ---
 
