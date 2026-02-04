@@ -37,7 +37,7 @@ It simulates trading decisions using historical stock market data.
 - **Output:** Total profit or loss
 
 ### Output Preview
-![Trading Bot Graph](INSERT_IMAGE_FILENAME_HERE.png)
+![Trading Bot Graph](https://github.com/user-attachments/assets/a3310be3-5636-417a-8090-eccc93f9eb3c)
 
 ---
 
