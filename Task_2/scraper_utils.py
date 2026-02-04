@@ -7,15 +7,17 @@ HEADERS = {
     "User-Agent": "Mozilla/5.0"
 }
 
-def scrape_samsung_phone(phone_slug):
+def scrape_samsung_phone(phone_keyword):
     """
-    phone_slug example:
-    samsung_galaxy_s21
-    samsung_galaxy_a54
-    samsung_galaxy_m51
+    phone_keyword example:
+    s23
+    s22 ultra
+    galaxy m51
     """
 
-    search_url = f"https://www.gsmarena.com/res.php3?sSearch={phone_slug}"
+    # GSMArena works better with full brand name
+    search_url = f"https://www.gsmarena.com/res.php3?sSearch=samsung+{phone_keyword.replace(' ', '+')}"
+
     res = requests.get(search_url, headers=HEADERS, timeout=10)
     soup = BeautifulSoup(res.text, "html.parser")
 
@@ -45,7 +47,7 @@ def scrape_samsung_phone(phone_slug):
         "display": data.get("Display"),
         "battery": data.get("Battery"),
         "camera": data.get("Main Camera"),
-        "ram": "Unknown",
-        "storage": "Unknown",
+        "ram": data.get("RAM", "Unknown"),
+        "storage": data.get("Internal", "Unknown"),
         "price": 0
     }

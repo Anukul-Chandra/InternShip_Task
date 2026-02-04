@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Samsung Phone Advisor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            padding: 40px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+        }
+        h2 {
+            text-align: center;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 16px;
+        }
+        button {
+            margin-top: 15px;
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            background: #1976d2;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #125aa0;
+        }
+        .answer {
+            margin-top: 20px;
+            white-space: pre-line;
+            background: #eef2f5;
+            padding: 15px;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>📱 Samsung Phone Advisor</h2>
+
+    <input 
+        type="text" 
+        id="question" 
+        placeholder="e.g. Compare Samsung S23 Ultra and Samsung S22 Ultra"
+    >
+
+    <button onclick="askQuestion()">Ask</button>
+
+    <div class="answer" id="answer"></div>
+</div>
+
+<script>
+async function askQuestion() {
+    const question = document.getElementById("question").value;
+    const answerBox = document.getElementById("answer");
+
+    if (!question) {
+        answerBox.innerText = "Please enter a question.";
+        return;
+    }
+
+    answerBox.innerText = "Loading...";
+
+    try {
+        const response = await fetch(
+            `http://127.0.0.1:8000/ask?question=${encodeURIComponent(question)}`,
+            { method: "POST" }
+        );
+
+        const data = await response.json();
+        answerBox.innerText = data.answer;
+
+    } catch (error) {
+        answerBox.innerText = "Error connecting to server.";
+    }
+}
+</script>
+
+</body>
+</html>

@@ -18,6 +18,7 @@ def fetch_phone_from_db(keyword):
     cur.close()
     return rows
 
+
 def insert_phone_into_db(phone):
     cur = conn.cursor()
     cur.execute("""

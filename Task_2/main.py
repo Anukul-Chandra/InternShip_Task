@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 import re
 
 from db_utils import fetch_phone_from_db, insert_phone_into_db
@@ -8,9 +9,16 @@ from scraper_utils import scrape_samsung_phone
 
 app = FastAPI()
 
+# Allow frontend (HTML file) to talk to API
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-# ---------------- Simple text formatter ----------------
-# This function just turns raw DB data into a readable response
+# ---------------- Formatting ----------------
 def generate_review(phone):
     return (
         f"{phone[0]} specifications:\n"
@@ -23,14 +31,9 @@ def generate_review(phone):
         f"- Price: ${phone[7]}"
     )
 
-
-# ---------------- Phone name parsing ----------------
-# This tries to pull Samsung phone names from the user question.
-# It works for both single phone queries and comparison queries.
+# ---------------- Phone name extraction ----------------
 def extract_phone_names(question: str):
     q = question.lower()
-
-    # If the user is comparing, phones are usually separated by "and" or commas
     parts = re.split(r'and|,', q)
 
     phones = []
@@ -46,12 +49,10 @@ def extract_phone_names(question: str):
 
     return phones
 
-
-# ---------------- Main API endpoint ----------------
+# ---------------- API ----------------
 @app.post("/ask")
 def ask(question: str):
 
-    # Step 1: Try to figure out which Samsung phones the user is talking about
     phone_queries = extract_phone_names(question)
 
     if not phone_queries:
@@ -61,40 +62,38 @@ def ask(question: str):
 
     for phone_query in phone_queries:
 
-        # Step 2: First check if the phone already exists in our database
+        # 1️⃣ DB first
         data = fetch_phone_from_db(phone_query)
 
         if not data:
-            # Step 3: If not found in DB, try to fetch it from a phone website
-            slug = (
+            # 2️⃣ Prepare search keyword for GSMArena
+            search_keyword = (
                 phone_query
                 .replace("samsung", "")
                 .replace("galaxy", "")
                 .strip()
-                .replace(" ", "_")
             )
 
-            scraped = scrape_samsung_phone(slug)
+            scraped = scrape_samsung_phone(search_keyword)
 
-            # If scraping also fails, we stop here
             if not scraped:
                 return {
                     "answer": f"Sorry, data not found online for {phone_query}."
                 }
 
-            # Step 4: Save the newly scraped phone into the database
+            # 3️⃣ Insert scraped data
             insert_phone_into_db(scraped)
 
-            # Step 5: Fetch again from DB so everything comes from one source
+            # 4️⃣ Fetch again from DB
             data = fetch_phone_from_db(scraped["model"])
 
         results.append(data[0])
 
-    # ---------------- Single phone request ----------------
+    # -------- Single phone --------
     if len(results) == 1:
         return {"answer": generate_review(results[0])}
 
-    # ---------------- Phone comparison ----------------
+    # -------- Comparison --------
     p1, p2 = results
 
     return {
