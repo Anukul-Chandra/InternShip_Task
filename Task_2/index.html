@@ -2,93 +2,133 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Samsung Phone Advisor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Phone Advisor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f6f8;
-            padding: 40px;
-        }
-        .container {
-            max-width: 600px;
-            margin: auto;
-            background: white;
-            padding: 25px;
-            border-radius: 8px;
-        }
-        h2 {
-            text-align: center;
-        }
-        input {
-            width: 100%;
-            padding: 10px;
-            margin-top: 10px;
-            font-size: 16px;
-        }
-        button {
-            margin-top: 15px;
-            width: 100%;
-            padding: 10px;
-            font-size: 16px;
-            background: #1976d2;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        button:hover {
-            background: #125aa0;
-        }
-        .answer {
-            margin-top: 20px;
-            white-space: pre-line;
-            background: #eef2f5;
-            padding: 15px;
-            border-radius: 6px;
-        }
+        body { background-color: #f0f2f5; font-family: 'Segoe UI', sans-serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .card { width: 100%; max-width: 800px; padding: 30px; border-radius: 15px; box-shadow: 0 8px 30px rgba(0,0,0,0.12); border: none; }
+        .btn-primary { background: linear-gradient(45deg, #2563eb, #1e40af); border: none; padding: 12px; font-weight: 600; }
+        .table th { background-color: #f8f9fa; text-transform: uppercase; font-size: 0.85rem; color: #6c757d; }
+        .vs-badge { background-color: #ffca2c; color: #000; padding: 5px 10px; border-radius: 20px; font-weight: bold; font-size: 0.8rem; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>📱 Samsung Phone Advisor</h2>
+    <div class="card">
+        <div class="text-center mb-4">
+            <h2 class="fw-bold mb-2">📱 Samsung Phone Advisor</h2>
+            <p class="text-muted">Search single (e.g., "Samsung S23") or Compare (e.g., "S22 vs S23")</p>
+        </div>
+        
+        <div class="input-group mb-3">
+            <input type="text" id="question" class="form-control form-control-lg" placeholder="Enter phone model..." onkeypress="handleEnter(event)">
+            <button class="btn btn-primary px-4" onclick="askQuestion()">Search</button>
+        </div>
 
-    <input 
-        type="text" 
-        id="question" 
-        placeholder="e.g. Compare Samsung S23 Ultra and Samsung S22 Ultra"
-    >
+        <div id="loading" class="text-center py-4" style="display: none;">
+            <div class="spinner-border text-primary" role="status"></div>
+            <p class="mt-2 text-muted">Analyzing request...</p>
+        </div>
 
-    <button onclick="askQuestion()">Ask</button>
+        <div id="result" class="mt-4"></div>
+    </div>
 
-    <div class="answer" id="answer"></div>
-</div>
+    <script>
+        function handleEnter(e) {
+            if (e.key === "Enter") askQuestion();
+        }
 
-<script>
-async function askQuestion() {
-    const question = document.getElementById("question").value;
-    const answerBox = document.getElementById("answer");
+        async function askQuestion() {
+            const question = document.getElementById("question").value.trim();
+            const resultDiv = document.getElementById("result");
+            const loadingDiv = document.getElementById("loading");
 
-    if (!question) {
-        answerBox.innerText = "Please enter a question.";
-        return;
-    }
+            if (!question) return alert("Please enter a model name!");
 
-    answerBox.innerText = "Loading...";
+            resultDiv.innerHTML = "";
+            loadingDiv.style.display = "block";
 
-    try {
-        const response = await fetch(
-            `http://127.0.0.1:8000/ask?question=${encodeURIComponent(question)}`,
-            { method: "POST" }
-        );
+            try {
+                const response = await fetch(`http://127.0.0.1:8000/ask?question=${encodeURIComponent(question)}`, {
+                    method: "POST"
+                });
+                const data = await response.json();
+                loadingDiv.style.display = "none";
 
-        const data = await response.json();
-        answerBox.innerText = data.answer;
+                // Scenario 1: Comparison (VS)
+                if (data.mode === "comparison") {
+                    const p1 = data.phone1;
+                    const p2 = data.phone2;
+                    
+                    resultDiv.innerHTML = `
+                        <div class="table-responsive">
+                            <h5 class="text-center mb-3">⚔️ Comparison Result</h5>
+                            <table class="table table-bordered text-center align-middle">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th style="width: 20%">Feature</th>
+                                        <th style="width: 40%">${p1.model || "Phone 1"}</th>
+                                        <th style="width: 40%">${p2.model || "Phone 2"}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${generateRow("Release", p1.release_date, p2.release_date)}
+                                    ${generateRow("Display", p1.display, p2.display)}
+                                    ${generateRow("Battery", p1.battery, p2.battery)}
+                                    ${generateRow("Camera", p1.camera, p2.camera)}
+                                    ${generateRow("RAM", p1.ram, p2.ram)}
+                                    ${generateRow("Storage", p1.storage, p2.storage)}
+                                    ${generateRow("Price", "$" + p1.price, "$" + p2.price)}
+                                </tbody>
+                            </table>
+                        </div>`;
+                }
+                
+                // Scenario 2: Single Phone
+                else if (data.mode === "single") {
+                    const p = data.data;
+                    resultDiv.innerHTML = `
+                        <div class="card bg-light p-3">
+                            <h4 class="text-center text-primary mb-3">${p.model}</h4>
+                            <table class="table table-striped">
+                                <tbody>
+                                    <tr><th>📅 Release</th><td>${p.release_date} (${p.release_year})</td></tr>
+                                    <tr><th>📱 Display</th><td>${p.display}</td></tr>
+                                    <tr><th>🔋 Battery</th><td>${p.battery}</td></tr>
+                                    <tr><th>📸 Camera</th><td>${p.camera}</td></tr>
+                                    <tr><th>💾 RAM</th><td>${p.ram}</td></tr>
+                                    <tr><th>💽 Storage</th><td>${p.storage}</td></tr>
+                                    <tr><th>💰 Price</th><td>$${p.price}</td></tr>
+                                </tbody>
+                            </table>
+                        </div>`;
+                } 
+                
+                // Scenario 3: Not Found
+                else {
+                    resultDiv.innerHTML = `<div class="alert alert-warning text-center">❌ No data found for "${question}"</div>`;
+                }
 
-    } catch (error) {
-        answerBox.innerText = "Error connecting to server.";
-    }
-}
-</script>
+            } catch (error) {
+                loadingDiv.style.display = "none";
+                resultDiv.innerHTML = `<div class="alert alert-danger text-center">Server Error. Check terminal!</div>`;
+            }
+        }
 
+        function generateRow(label, val1, val2) {
+            // যদি ডাটা না থাকে
+            val1 = val1 || "-";
+            val2 = val2 || "-";
+            // যেটার ভ্যালু ভালো সেটা হাইলাইট করা যেতে পারে (ভবিষ্যতের জন্য), এখন সিম্পল রাখছি
+            return `
+                <tr>
+                    <td class="fw-bold bg-light">${label}</td>
+                    <td>${val1}</td>
+                    <td>${val2}</td>
+                </tr>
+            `;
+        }
+    </script>
 </body>
 </html>
