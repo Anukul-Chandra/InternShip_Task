@@ -1,6 +1,6 @@
 ## 🚀 InternShip Task Assignment Submission
 
-This repository contains the solutions for the InternShip Task Assignment Submission given by **Genuine Technology & Reserch LTD** , consisting of two independent tasks: a **Stock Trading Bot** and a **Samsung Phone Advisor Agent**.
+This repository contains the solutions for the InternShip Task Assignment given by **Genuine Technology & Reserch LTD** , consisting of two independent tasks: a **Stock Trading Bot** and a **Samsung Phone Advisor Agent**.
 
 ---
 
