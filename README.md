@@ -101,17 +101,24 @@ App will run at: http://127.0.0.1:8000
 ## 📂 Project Structure
 
 ```
-├── Task 1 Trading Bot.ipynb
+├── Task_1/
+│   ├── AAPL_stock_data.csv
+│   ├── index.html
+│   ├── main.py
+│   ├── requirements.txt
+│   └── trading_strategy.ipynb
 ├── Task_2/
 │   ├── main.py
 │   ├── db_utils.py
 │   ├── scraper_utils.py
 │   ├── index.html
 │   └── phones.db
+|   └── requirements.txt
+
 ├── requirements.txt
 └── README.md
 ```
 
 ---
 
-End of Documentation
+
