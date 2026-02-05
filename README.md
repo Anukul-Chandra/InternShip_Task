@@ -19,7 +19,12 @@ A complete walkthrough of both projects running successfully can be viewed here:
 
 👉 **[https://drive.google.com/drive/folders/1qG4hC5qSOZSCAq3NDsSOQHHc5kM_7Cbu?usp=sharing]**
 
+
 ---
+
+https://github.com/user-attachments/assets/7a80cbbf-c038-44f0-967c-441182686da2
+
+-----
 
 ## 📈 Task 1: Stock Trading Strategy Bot
 
@@ -33,15 +38,18 @@ It simulates trading decisions using historical stock market data.
 - **Death Cross (Sell Signal):** SMA50 crosses below SMA200  
 - **Initial Capital:** $5000  
 - **Output:** Total profit or loss
-
+---
 
 ### Live Demo :  https://stock-trading-bot-iacy.onrender.com
 
-
+---
 ### Output Preview 
 
-![Trading Bot Graph](https://github.com/user-attachments/assets/12388e58-3391-4c7c-a444-40e4cfc04965)
+![MSFT](https://github.com/user-attachments/assets/f619b93e-f7de-453d-bcd1-dc28ff3568c3)
 
+
+
+![APPL](https://github.com/user-attachments/assets/8bcee3a8-7faa-4a90-93c8-5cb4b370e981)
 
 
 ---
