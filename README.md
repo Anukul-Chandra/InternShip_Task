@@ -17,9 +17,7 @@ This repository contains the solutions for the InternShip Task Assignment given 
 
 A complete walkthrough of both projects running successfully can be viewed here:
 
-👉 **[INSERT YOUR GOOGLE DRIVE VIDEO LINK HERE]**
-
-> Please ensure the link permission is set to **Anyone with the link can view**
+👉 **[https://drive.google.com/drive/folders/1qG4hC5qSOZSCAq3NDsSOQHHc5kM_7Cbu?usp=sharing]**
 
 ---
 
@@ -36,10 +34,14 @@ It simulates trading decisions using historical stock market data.
 - **Initial Capital:** $5000  
 - **Output:** Total profit or loss
 
-### Output Preview
-![Trading Bot Graph](https://github.com/user-attachments/assets/12388e58-3391-4c7c-a444-40e4cfc04965)
 
 ### Live Demo :  https://stock-trading-bot-iacy.onrender.com
+
+
+### Output Preview 
+
+![Trading Bot Graph](https://github.com/user-attachments/assets/12388e58-3391-4c7c-a444-40e4cfc04965)
+
 
 
 ---
