@@ -85,7 +85,7 @@ pip install -r requirements.txt
 
 ### Run Task 1
 ```bash
-jupyter notebook "Task 1 Trading Bot.ipynb"
+uvicron main:app --reload
 ```
 
 ### Run Task 2
