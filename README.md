@@ -83,15 +83,34 @@ cd Samsung-Phone-Adviser
 pip install -r requirements.txt
 ```
 
-### Run Task 1
+## Run Task 1 :
+
+### Backend(1st Terminal): 
 ```bash
+cd Task_1
 uvicron main:app --reload
 ```
 
-### Run Task 2
+### Frontend(2nd terminal) :
+
+```bash
+cd Task_1
+python3 -m http.server 5500
+```
+
+## Run Task 2 :
+
+### Backend(1st Terminal): 
 ```bash
 cd Task_2
-uvicorn main:app --reload
+uvicron main:app --reload
+```
+
+### Frontend(2nd terminal) :
+
+```bash
+cd Task_2
+python3 -m http.server 5500
 ```
 
 App will run at: http://127.0.0.1:8000
