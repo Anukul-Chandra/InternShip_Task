@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Algorithmic Trading Simulator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f0f2f5; padding: 20px; font-family: 'Segoe UI', sans-serif; }
+        .container { max-width: 900px; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .log-table { max-height: 300px; overflow-y: auto; font-size: 0.9rem; }
+        img { width: 100%; border-radius: 10px; margin-top: 20px; border: 1px solid #ddd; }
+        .summary-box { background: #e9ecef; padding: 15px; border-radius: 10px; margin-top: 20px; }
+        .profit { color: green; font-weight: bold; }
+        .loss { color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 class="text-center mb-4">📈 Stock Trading Simulator</h2>
+    
+    <div class="row g-3">
+        <div class="col-md-3">
+            <label>Stock Symbol</label>
+            <input type="text" id="symbol" class="form-control" placeholder="AAPL" value="AAPL">
+        </div>
+        <div class="col-md-3">
+            <label>Start Date</label>
+            <input type="date" id="start_date" class="form-control" value="2019-01-01">
+        </div>
+        <div class="col-md-3">
+            <label>End Date</label>
+            <input type="date" id="end_date" class="form-control" value="2023-12-31">
+        </div>
+        <div class="col-md-3">
+            <label>Budget ($)</label>
+            <input type="number" id="budget" class="form-control" value="5000">
+        </div>
+    </div>
+
+    <button class="btn btn-primary w-100 mt-3" onclick="runSimulation()">Run Simulation 🚀</button>
+
+    <!-- Loading -->
+    <div id="loading" class="text-center mt-4" style="display: none;">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p>Analyzing Market Data... Please wait.</p>
+    </div>
+
+    <!-- Results -->
+    <div id="result-area" style="display: none;">
+        
+        <!-- Summary -->
+        <div class="summary-box text-center">
+            <h4>Final Balance: <span id="final_balance"></span></h4>
+            <h5>Total Profit/Loss: <span id="total_profit"></span></h5>
+        </div>
+
+        <!-- Graph -->
+        <h5 class="mt-4">📊 Performance Chart</h5>
+        <div id="plot-area"></div>
+
+        <!-- Logs -->
+        <h5 class="mt-4">📝 Trade Logs</h5>
+        <div class="log-table border rounded p-2">
+            <table class="table table-striped table-sm">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Action</th>
+                        <th>Price</th>
+                        <th>Shares</th>
+                        <th>Balance</th>
+                    </tr>
+                </thead>
+                <tbody id="log-body"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    async function runSimulation() {
+        const symbol = document.getElementById('symbol').value.toUpperCase();
+        const start_date = document.getElementById('start_date').value;
+        const end_date = document.getElementById('end_date').value;
+        const budget = parseFloat(document.getElementById('budget').value);
+
+        document.getElementById('loading').style.display = 'block';
+        document.getElementById('result-area').style.display = 'none';
+
+        try {
+            const response = await fetch('/simulate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ symbol, start_date, end_date, budget })
+            });
+
+            const data = await response.json();
+            document.getElementById('loading').style.display = 'none';
+
+            if (data.error) {
+                alert(data.error);
+                return;
+            }
+
+            // Show Results
+            document.getElementById('result-area').style.display = 'block';
+            
+            // 1. Balance & Profit
+            document.getElementById('final_balance').innerText = "$" + data.result.final_balance;
+            const profitEl = document.getElementById('total_profit');
+            profitEl.innerText = "$" + data.result.profit;
+            profitEl.className = data.result.profit >= 0 ? "profit" : "loss";
+
+            // 2. Plot
+            document.getElementById('plot-area').innerHTML = `<img src="data:image/png;base64,${data.plot}" />`;
+
+            // 3. Logs
+            const tbody = document.getElementById('log-body');
+            tbody.innerHTML = "";
+            data.result.logs.forEach(log => {
+                const color = log.type === 'BUY' ? 'text-success' : 'text-danger';
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${log.date}</td>
+                        <td class="${color} fw-bold">${log.type}</td>
+                        <td>$${log.price}</td>
+                        <td>${log.shares}</td>
+                        <td>$${log.balance}</td>
+                    </tr>
+                `;
+            });
+
+        } catch (error) {
+            console.error(error);
+            alert("Something went wrong!");
+            document.getElementById('loading').style.display = 'none';
+        }
+    }
+</script>
+
+</body>
+</html>
