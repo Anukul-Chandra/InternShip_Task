@@ -37,7 +37,10 @@ It simulates trading decisions using historical stock market data.
 - **Output:** Total profit or loss
 
 ### Output Preview
-![Trading Bot Graph](https://github.com/user-attachments/assets/a3310be3-5636-417a-8090-eccc93f9eb3c)
+![Trading Bot Graph](https://github.com/user-attachments/assets/12388e58-3391-4c7c-a444-40e4cfc04965)
+
+### Live Demo :  https://stock-trading-bot-iacy.onrender.com
+
 
 ---
 
@@ -47,7 +50,7 @@ It simulates trading decisions using historical stock market data.
 A web-based intelligent AI agent that provides real-time specifications and comparisons for Samsung smartphones.  
 It uses a hybrid approach combining **SQLite database caching** with **real-time web scraping**.
 
-**Live Demo:** https://samsung-phone-adviser-1.onrender.com/
+### Live Demo: https://samsung-phone-adviser-1.onrender.com/
 
 ### Key Features
 - Smart search for phone specs  
@@ -61,8 +64,8 @@ It uses a hybrid approach combining **SQLite database caching** with **real-time
 ![Comparison Result](![photo_2026-02-05 02 24 33](https://github.com/user-attachments/assets/bf5e9849-0648-4d30-98ca-38f20a7bb906)
 )
 
-**Single Phone Result**
-![Single Result](![photo_2026-02-05 02 24 58](https://github.com/user-attachments/assets/8a9f71ff-bd50-4fe0-807b-cd423b1f29fb)
+**Single Result**
+(![photo_2026-02-05 02 24 58](https://github.com/user-attachments/assets/8a9f71ff-bd50-4fe0-807b-cd423b1f29fb)
 )
 
 ---
